@@ -1,7 +1,7 @@
 {
-  "name": "calculate_profit_and_loss",
+  "name": "calculate_profit_and_loss_backend",
   "version": "1.0.0",
-  "description": "A backend service that accepts a wallet address and returns their PnL (Profit and Loss) for xAVAX token.",
+  "description": "Calculate the profit and loss (PnL) of a wallet address that holds xAVAX tokens.",
   "license": "GPL-3.0",
   "author": "ariessa",
   "type": "commonjs",

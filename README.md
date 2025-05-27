@@ -1,6 +1,6 @@
-# Calculate Profit and Loss
+# Calculate Profit and Loss - Backend
 
-A backend service that accepts a wallet address and returns their PnL (Profit and Loss) for xAVAX token - a leveraged derivative of sAVAX with no liquidation risk.
+Calculate the profit and loss (PnL) of a wallet address that holds xAVAX tokens.
 
 <br />
 
@@ -8,6 +8,7 @@ A backend service that accepts a wallet address and returns their PnL (Profit an
 
 - [System Architecture Diagram](#system-architecture-diagram)
 - [Entity Relationship Diagram](#entity-relationship-diagram)
+- [Low Fidelity Wireframes](#low-fidelity-wireframes)
 - [Installation](#installation)
     - [Prerequisites](#prerequisites)
     - [Setup](#setup)
@@ -74,4 +75,4 @@ make tests
 
 ## License
 
-Calculate Profit and Loss is licensed under the [GNU GPLv3 License](LICENSE).
+Calculate Profit and Loss - Backend is licensed under the [GNU GPLv3 License](LICENSE).
