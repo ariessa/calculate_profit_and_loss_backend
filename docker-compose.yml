@@ -30,6 +30,9 @@ services:
       - "${DB_PORT}:${DB_PORT}"
     env_file:
       - .env
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres:/var/lib/postgresql/data
 
 volumes:
   app:

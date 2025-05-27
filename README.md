@@ -6,11 +6,31 @@ A backend service that accepts a wallet address and returns their PnL (Profit an
 
 **Table of Contents**
 
+- [System Architecture Diagram](#system-architecture-diagram)
+- [Entity Relationship Diagram](#entity-relationship-diagram)
 - [Installation](#installation)
     - [Prerequisites](#prerequisites)
     - [Setup](#setup)
 - [How to run the tests](#how-to-run-the-tests)
 - [License](#license)
+
+<br />
+
+## System Architecture Diagram
+
+<img src="diagrams/system_architecture_diagram.png"/>
+
+<br />
+
+## Entity Relationship Diagram
+
+<img src="diagrams/entity_relationship_diagram.png"/>
+
+<br />
+
+## Low Fidelity Wireframes
+
+<img src="wireframes/low_fidelity_wireframes.png"/>
 
 <br />
 
