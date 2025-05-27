@@ -1,0 +1,42 @@
+services:
+  app:
+    container_name: ${APP_CONTAINER_NAME}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ${APP_IMAGE}
+    restart: always
+    depends_on:
+      db:
+        condition: service_started
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    env_file:
+      - .env
+    volumes:
+      - ".:/usr/src/app"
+
+  db:
+    container_name: ${DB_CONTAINER_NAME}
+    image: ${DB_IMAGE}
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_NAME: ${DB_NAME}
+      POSTGRES_PORT: ${DB_PORT}
+      POSTGRES_HOST: ${DB_HOST}
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    env_file:
+      - .env
+
+volumes:
+  app:
+  db:
+
+networks:
+  default:
+    name: ${NETWORK_NAME}
+    driver: bridge
+    external: true
