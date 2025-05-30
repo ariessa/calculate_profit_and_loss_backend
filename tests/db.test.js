@@ -69,7 +69,11 @@ beforeEach(async () => {
       VALUES 
         ('0x1234567890abcdef1234567890abcdef12345678', '2024-01-01 00:00:00.000 UTC', 0),
         ('0x1234567890abcdef1234567890abcdef12345678', '2024-01-02 00:00:00.000 UTC', 100),
-        ('0x1234567890abcdef1234567890abcdef12345678', '2024-01-03 00:00:00.000 UTC', 50);
+        ('0xabcdefabcdefabcdefabcdefabcdefabcdefabcd', '2024-01-02 00:00:00.000 UTC', 0),
+        ('0x1234567890abcdef1234567890abcdef12345678', '2024-01-03 00:00:00.000 UTC', 50),
+        ('0xabcdefabcdefabcdefabcdefabcdefabcdefabcd', '2024-01-03 00:00:00.000 UTC', 0),
+        ('0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef', '2024-01-03 00:00:00.000 UTC', 100);
+        ;
     `);
 });
 
@@ -80,6 +84,9 @@ afterEach(async () => {
 
 describe("function get_user_transactions", () => {
   const user_address = "0x1234567890abcdef1234567890abcdef12345678";
+  const user_address_2 = "0xabcdef1234567890abcdef1234567890abcdef12";
+  const user_address_3 = "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd";
+  const user_address_4 = "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef";
 
   test("returns all transactions for a user that has balance change > 0", async () => {
     const query = "SELECT * FROM get_user_transactions($1)";
@@ -100,6 +107,45 @@ describe("function get_user_transactions", () => {
     expect(result.rows).toBeDefined();
     expect(Array.isArray(result.rows)).toBe(true);
     expect(result.rows.length).toBe(2);
+    expect(result.rows).toMatchObject(expected_result);
+  });
+
+  test("returns [] when a user has no transaction", async () => {
+    const query = "SELECT * FROM get_user_transactions($1)";
+    const result = await pool.query(query, [user_address_2]);
+    const expected_result = [];
+
+    expect(result.rows).toBeDefined();
+    expect(Array.isArray(result.rows)).toBe(true);
+    expect(result.rows.length).toBe(0);
+    expect(result.rows).toMatchObject(expected_result);
+  });
+
+  test("returns [] when a user has transactions with balance change = 0", async () => {
+    const query = "SELECT * FROM get_user_transactions($1)";
+    const result = await pool.query(query, [user_address_3]);
+    const expected_result = [];
+
+    expect(result.rows).toBeDefined();
+    expect(Array.isArray(result.rows)).toBe(true);
+    expect(result.rows.length).toBe(0);
+    expect(result.rows).toMatchObject(expected_result);
+  });
+
+  test("returns a single transaction when a user has only 1 transaction", async () => {
+    const query = "SELECT * FROM get_user_transactions($1)";
+    const result = await pool.query(query, [user_address_4]);
+    const expected_result = [
+      {
+        balance: "100",
+        balance_change: "100",
+        trade_type: "buy",
+      },
+    ];
+
+    expect(result.rows).toBeDefined();
+    expect(Array.isArray(result.rows)).toBe(true);
+    expect(result.rows.length).toBe(1);
     expect(result.rows).toMatchObject(expected_result);
   });
 });
