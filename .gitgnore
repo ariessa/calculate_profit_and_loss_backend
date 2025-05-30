@@ -9,3 +9,6 @@ coverage/
 
 # Ignore dotenv environment variable file
 .env
+
+# Ignore postgres
+postgres/
