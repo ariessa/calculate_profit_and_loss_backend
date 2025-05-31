@@ -291,23 +291,35 @@ Ignoring all zero balances, the trades can be classified as follows:
 - Sell 50 tokens @ $1.28 on 2024-01-03 00:00:00.000 UTC
 
 Average Cost Basis, P(avg) = 1.30
+
 Sell Price, P(sell) = 1.28
+
 Tokens Sold, Q(sell) = 100 - 50 = 50
+
 Current Token Price, P(current) = 1.35
+
 Amount of Token Holdings, Q(current) = 100 - 50 = 50
 
 Realised PnL ($)
+
 = (P(sell) - P(avg)) * Q(sell)
+
 = (1.28 - 1.30) * 50
+
 = -1
 
 Unrealised PnL ($)
+
 = (P(current) - P(avg)) * Q(current)
+
 = (1.35 - 1.30) * 50
+
 = 2.5
 
 Total PnL ($)
+
 = -1 + 2.5
+
 =1.5
 
 <br />
