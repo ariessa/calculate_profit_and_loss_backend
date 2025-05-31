@@ -11,15 +11,15 @@ Calculate the profit and loss (PnL) of a wallet address that holds xAVAX tokens.
 - [Entity Relationship Diagram](#entity-relationship-diagram)
 - [Low Fidelity Wireframes](#low-fidelity-wireframes)
 - [Installation](#installation)
-    - [Prerequisites](#prerequisites)
-    - [Setup](#setup)
+  - [Prerequisites](#prerequisites)
+  - [Setup](#setup)
 - [Tests](#tests)
-    - [How to Run the Tests](#how-to-run-the-tests)
+  - [How to Run the Tests](#how-to-run-the-tests)
 - [Database Functions](#database-functions)
-    - [Calculate User's Profit and Loss (PnL)](#calculate-users-profit-and-loss-pnl)
-    - [Get User's transactions](#get-users-transactions)
+  - [Calculate User's Profit and Loss (PnL)](#calculate-users-profit-and-loss-pnl)
+  - [Get User's transactions](#get-users-transactions)
 - [API Endpoint](#api-endpoint)
-    - [GET /pnl/:address](#get-pnladdress)
+  - [GET /pnl/:address](#get-pnladdress)
 - [License](#license)
 
 <br />
@@ -107,32 +107,34 @@ make tests
 ### Unit Tests Covered
 
 - Database functions
-    - get_user_transactions
-        - returns buy and sell transactions for user with multiple balance changes
-        - returns empty array for user with no balance records
-        - returns empty array for user with only unchanged balances
-        - returns a single buy transaction for user with one balance event
-    - calculate_user_pnl
-        - User never held tokens
-        - User has held tokens but fully exited
-        - User with realised and unrealised gains
-        - User with realised and unrealised losses
-        - User with realised gains, still holding
-        - User with unrealised gains only
-        - User with no significant PnL
-        - User not in database
+
+  - get_user_transactions
+    - returns buy and sell transactions for user with multiple balance changes
+    - returns empty array for user with no balance records
+    - returns empty array for user with only unchanged balances
+    - returns a single buy transaction for user with one balance event
+  - calculate_user_pnl
+    - User never held tokens
+    - User has held tokens but fully exited
+    - User with realised and unrealised gains
+    - User with realised and unrealised losses
+    - User with realised gains, still holding
+    - User with unrealised gains only
+    - User with no significant PnL
+    - User not in database
 
 - Utility Functions
-    - is_valid_address
-        - returns true when input is a valid address
-        - returns false when input is an invalid address
+
+  - is_valid_address
+    - returns true when input is a valid address
+    - returns false when input is an invalid address
 
 - API Endpoints
-    - GET /pnl/:address
-        - should return PnL and transactions if address is valid and has data
-        - should return empty results if address is valid but no transactions
-        - should return error if address is invalid
-        - should handle server errors
+  - GET /pnl/:address
+    - should return PnL and transactions if address is valid and has data
+    - should return empty results if address is valid but no transactions
+    - should return error if address is invalid
+    - should handle server errors
 
 ## Database Functions
 
@@ -145,11 +147,11 @@ Let:
 - Q(i) = amount of tokens bought in trade i
 - P(i) = price per token bought in trade i
 - Total amount held = ∑Q(i)
-- Total cost = ∑(Qi * P(i))
+- Total cost = ∑(Qi \* P(i))
 
 Then:
 
-P(avg) = (∑(Q(i) * P(i))) / ∑Q(i) 
+P(avg) = (∑(Q(i) \* P(i))) / ∑Q(i)
 
 <br />
 
@@ -163,7 +165,7 @@ Let:
 
 Then:
 
-Pnl(R) = (P(sell) - P(avg)) * Q(sell)
+Pnl(R) = (P(sell) - P(avg)) \* Q(sell)
 
 <br />
 
@@ -176,7 +178,7 @@ Let:
 
 Then:
 
-Pnl(U) = (P(current) - P(avg)) * Q(current)
+Pnl(U) = (P(current) - P(avg)) \* Q(current)
 
 <br />
 
@@ -252,6 +254,92 @@ Total PnL ($)
 ## API Endpoint
 
 ### GET /pnl/:address
+
+Fetches the profit and loss (PnL) summary and detailed transaction history for a given Avalanche C-Chain wallet address.
+
+<br />
+
+**Path Parameters**
+
+- `address` (string): The wallet address to query. Must be a valid Avalanche C-Chain address.
+
+<br />
+
+**Success Response**
+
+Returns a JSON object with:
+
+- `address`: the wallet queried
+- `pnl`: calculated profit and loss data
+- `transactions`: an array of buy/sell activities
+
+<br />
+
+**Example Response (200 OK)**
+
+```json
+{
+  "address": "0xabc1234567890defabc1234567890defabc12345",
+  "pnl": {
+    "realised_pnl": 102.5,
+    "unrealised_pnl": -0.75,
+    "total_pnl": 101.75,
+    "pnl_description": "Realised gains, still holding"
+  },
+  "transactions": [
+    {
+      "timestamp": "2025-04-01",
+      "type": "buy",
+      "amount": 150.0,
+      "price_usd": 0.67,
+      "value_usd": 100.5,
+      "age": "2 months ago"
+    },
+    {
+      "timestamp": "2025-05-20",
+      "type": "sell",
+      "amount": -60.0,
+      "price_usd": 1.7,
+      "value_usd": -102.0,
+      "age": "2 weeks ago"
+    }
+  ]
+}
+```
+
+<br />
+
+**Error Responses**
+
+- Invalid Address (200 OK with error field)
+
+  If the provided address is not valid:
+
+  ```json
+  {
+    "error": "Invalid address"
+  }
+  ```
+
+<br />
+
+- Internal Server Error (500)
+
+  If an unexpected error occurs while fetching or computing data:
+
+  ```json
+  {
+    "error": "Internal server error"
+  }
+  ```
+
+<br />
+
+**Notes**
+
+- Transactions only appear if there is at least one balance change (balance_change ≠ 0).
+
+- `pnl_description` provides a human-readable summary based on realised and unrealised gains.
 
 <br />
 
