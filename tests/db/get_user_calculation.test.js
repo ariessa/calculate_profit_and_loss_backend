@@ -4,15 +4,16 @@ let pool;
 
 beforeAll(async () => {
   pool = await setup_test_db();
-});
 
-afterAll(async () => {
-  await delete_test_db();
-});
-
-beforeEach(async () => {
   // Insert dummy data
   await pool.query(`
+      INSERT INTO token_prices (snapshot_date, price_in_usd)
+      VALUES
+        ('2024-01-01 00:00:00+00', 1.00),
+        ('2024-01-02 00:00:00+00', 2.00),
+        ('2024-01-03 00:00:00+00', 1.50),
+        ('2024-01-04 00:00:00+00', 2.50),
+        ('2024-01-05 00:00:00+00', 1.00);
       INSERT INTO user_balances (user_address, snapshot_date, balance)
       VALUES 
         ('0x1234567890abcdef1234567890abcdef12345678', '2024-01-01 00:00:00.000 UTC', 0),
@@ -21,13 +22,11 @@ beforeEach(async () => {
         ('0x1234567890abcdef1234567890abcdef12345678', '2024-01-03 00:00:00.000 UTC', 50),
         ('0xabcdefabcdefabcdefabcdefabcdefabcdefabcd', '2024-01-03 00:00:00.000 UTC', 0),
         ('0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef', '2024-01-03 00:00:00.000 UTC', 100);
-        ;
-    `);
+  `);
 });
 
-afterEach(async () => {
-  // Clear the table
-  await pool.query(`DELETE FROM user_balances`);
+afterAll(async () => {
+  await delete_test_db();
 });
 
 describe("function get_user_transactions", () => {
@@ -44,11 +43,15 @@ describe("function get_user_transactions", () => {
         balance: "50",
         balance_change: "-50",
         trade_type: "sell",
+        price_in_usd: "1.500000000000000000",
+        value_in_usd: "-75.0000",
       },
       {
         balance: "100",
         balance_change: "100",
         trade_type: "buy",
+        price_in_usd: "2.000000000000000000",
+        value_in_usd: "200.0000",
       },
     ];
 
@@ -82,6 +85,8 @@ describe("function get_user_transactions", () => {
         balance: "100",
         balance_change: "100",
         trade_type: "buy",
+        price_in_usd: "1.500000000000000000",
+        value_in_usd: "150.0000",
       },
     ];
 

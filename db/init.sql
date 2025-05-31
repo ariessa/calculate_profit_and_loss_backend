@@ -153,9 +153,11 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION get_user_transactions(p_user_address VARCHAR)
 RETURNS TABLE (
     snapshot_date TIMESTAMPTZ,
-    balance NUMERIC,
-    balance_change NUMERIC,
-    trade_type TEXT
+    balance NUMERIC(65, 18),
+    balance_change NUMERIC(65, 18),
+    trade_type TEXT,
+    price_in_usd NUMERIC(65, 18),
+    value_in_usd NUMERIC(65, 18)
 ) AS $$
 BEGIN
     RETURN QUERY
@@ -178,8 +180,12 @@ BEGIN
         CASE
             WHEN bc.balance_change > 0 THEN 'buy'
             WHEN bc.balance_change < 0 THEN 'sell'
-        END AS trade_type
+        END AS trade_type,
+        tp.price_in_usd,
+        ROUND(bc.balance_change * tp.price_in_usd, 4) AS value_in_usd
     FROM balance_changes bc
+    LEFT JOIN token_prices tp
+      ON DATE_TRUNC('day', bc.snapshot_date) = DATE_TRUNC('day', tp.snapshot_date)
     WHERE bc.balance_change <> 0
     ORDER BY bc.snapshot_date DESC;
 END;
