@@ -107,7 +107,6 @@ make tests
 ### Unit Tests Covered
 
 - Database functions
-
   - get_user_transactions
     - returns buy and sell transactions for user with multiple balance changes
     - returns empty array for user with no balance records
@@ -124,7 +123,6 @@ make tests
     - User not in database
 
 - Utility Functions
-
   - is_valid_address
     - returns true when input is a valid address
     - returns false when input is an invalid address
@@ -139,6 +137,15 @@ make tests
 ## Database Functions
 
 ### Calculate User's Profit and Loss (PnL)
+
+This PostgreSQL function computes the profit and loss (PnL) summary for a given user address by analyzing their transaction history and token holdings.
+
+The function returns:
+
+- Realised PnL: The total profit or loss from completed (closed) trades.
+- Unrealised PnL: The current profit or loss from open positions still held.
+- Total PnL: The combined value of realised and unrealised PnL.
+- PnL Description: A brief textual summary describing the user’s current PnL status.
 
 **Average Cost Basis Formula, P(avg)**
 
@@ -248,6 +255,13 @@ Total PnL ($)
 <br />
 
 ### Get User's Transactions
+
+This PostgreSQL function retrieves the historical transaction activity of a specific user wallet based on their token balance changes over time. Each transaction is inferred from a change in balance and is labeled as a buy (increase in balance) or sell (decrease in balance).
+
+The function also calculates:
+
+- `price_in_usd`: Estimated token price at the time of the transaction.
+- `value_in_usd`: USD value of the token amount involved in the transaction.
 
 <br />
 
