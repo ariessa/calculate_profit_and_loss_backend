@@ -39,16 +39,20 @@ Calculate the profit and loss (PnL) of a wallet address that holds xAVAX tokens.
 
 <img src="diagrams/system_architecture_diagram.png"/>
 
-This project uses data pulled from Dune Analytics to seed the PostgreSQL database.
+This project seeds the PostgreSQL database with data sourced from Dune Analytics.
 
-The script fetch_dune_query.sh is used to execute and fetch query results from Dune using the official API. Raw query results are stored in the query_results directory.
+The fetch_dune_query.sh script uses the official Dune API to execute queries and retrieve results. The queries collect daily xAVAX token prices and daily token balances for wallet holders.
 
-The files token_prices.csv and user_balances.csv are cleaned versions of the Dune outputs. These files are structured to match the database schema:
+Raw query results are saved in the query_results directory.
 
-- `token_prices`: Stores token price snapshots with timestamps.
-- `user_balances`: Stores user balances over time.
+The files token_prices.csv and user_balances.csv are cleaned and formatted versions of the raw data, structured to match the database schema:
 
-Header fields are updated to match the column names defined in the tables. Any `NULL` values in user balances are replaced with 0 to maintain data integrity and ensure smooth import.
+- token_prices: Contains timestamped snapshots of token prices.
+- user_balances: Contains wallet balances over time.
+
+Headers have been updated to align with the database column names. Any NULL values in user balances have been replaced with 0 to ensure data consistency and prevent import issues.
+
+Only data related to xAVAX tokens was retained in the token_prices dataset.
 
 <br />
 
@@ -106,7 +110,201 @@ make tests
 
 ## Database Functions
 
-### Calculate User's Profit and Loss
+### Calculate User's Profit and Loss (PnL)
+
+Buy Trade = -(Token Amount * Token Price)
+Sell Trade = (Token Amount * Token Price)
+
+The following formula were used to calculate total PnL, realised Pnl, and unrealised PnL.
+
+#### Realised PnL
+
+**Average Cost Basis Formula, P(avg)**
+
+Let:
+
+- Q(i) = amount of tokens bought in trade i
+- P(i) = price per token bought in trade i
+- Total amount held = ∑Q(i)
+- Total cost = ∑(Qi * P(i))
+
+Then:
+
+P(avg) = (∑(Q(i) * P(i))) / ∑Q(i) 
+
+<br />
+
+**Realised PnL Formula**
+
+Let:
+
+- Q(sell) = amount of tokens sold
+- P(sell) = price at which tokens are sold
+- P(avg) = average cost basis of tokens held
+
+Then:
+
+Realised PnL = (P(sell) - P(avg)) * Q(sell)
+
+**Example**
+
+Assume current date is 04/01/2024 and user address is 0x1234567890abcdef1234567890abcdef12345678.
+
+Table token_prices
+| snapshot_date | price_in_usd |
+| --- | --- |
+| 2024-01-01 00:00:00+00 | 1.25 |
+| 2024-01-02 00:00:00+00 | 1.30 |
+| 2024-01-03 00:00:00+00 | 1.28 |
+| 2024-01-04 00:00:00+00 | 1.35 |
+
+Table user_balances
+| user_address | snapshot_date | balance |
+| --- | --- | --- |
+| 0x1234567890abcdef1234567890abcdef12345678 | 2024-01-01 00:00:00.000 UTC | 0 |
+| 0x1234567890abcdef1234567890abcdef12345678 | 2024-01-02 00:00:00.000 UTC | 100 |
+| 0x1234567890abcdef1234567890abcdef12345678 | 2024-01-03 00:00:00.000 UTC | 50 |
+
+<br />
+
+**Calculation**
+
+Ignoring all zero balances, the trades can be classified as follows:
+
+- Buy 100 tokens @ $1.30 on 2024-01-02 00:00:00.000 UTC
+- Sell 50 tokens @ $1.28 on 2024-01-03 00:00:00.000 UTC
+
+Average Cost Basis, P(avg) = 1.30
+Sell Price, P(sell) = 1.28
+Tokens Sold, Q(sell) = 100 - 50 = 50
+
+Realised PnL ($)
+= (P(sell) - P(avg)) * Q(sell)
+= (1.28 - 1.30) * 50
+= -1
+
+<br />
+
+#### Unrealised PnL
+
+**Average Cost Basis Formula, P(avg)**
+
+Let:
+
+- Q(i) = amount of tokens bought in trade i
+- P(i) = price per token bought in trade i
+- Total amount held = ∑Q(i)
+- Total cost = ∑(Qi * P(i))
+
+Then:
+
+P(avg) = (∑(Q(i) * P(i))) / ∑Q(i) 
+
+<br />
+
+**Unrealised PnL Formula**
+
+Let:
+
+- P(current) = current price of token
+- Q(current) = current amount of tokens in holding
+
+Then:
+
+Unrealised PnL = (P(current) - P(avg)) * Q(current)
+
+**Example**
+
+Assume current date is 04/01/2024 and user address is 0x1234567890abcdef1234567890abcdef12345678.
+
+Table token_prices
+| snapshot_date | price_in_usd |
+| --- | --- |
+| 2024-01-01 00:00:00+00 | 1.25 |
+| 2024-01-02 00:00:00+00 | 1.30 |
+| 2024-01-03 00:00:00+00 | 1.28 |
+| 2024-01-04 00:00:00+00 | 1.35 |
+
+Table user_balances
+| user_address | snapshot_date | balance |
+| --- | --- | --- |
+| 0x1234567890abcdef1234567890abcdef12345678 | 2024-01-01 00:00:00.000 UTC | 0 |
+| 0x1234567890abcdef1234567890abcdef12345678 | 2024-01-02 00:00:00.000 UTC | 100 |
+| 0x1234567890abcdef1234567890abcdef12345678 | 2024-01-03 00:00:00.000 UTC | 50 |
+
+<br />
+
+**Calculation**
+
+Ignoring all zero balances, the trades can be classified as follows:
+
+- Buy 100 tokens @ $1.30 on 2024-01-02 00:00:00.000 UTC
+- Sell 50 tokens @ $1.28 on 2024-01-03 00:00:00.000 UTC
+
+Average Cost Basis, P(avg) = 1.30
+Current Token Price, P(current) = 1.35
+Amount of Token Holdings, Q(current) = 100 - 50 = 50
+
+Unrealised PnL ($)
+= (P(current) - P(avg)) * Q(current)
+= (1.35 - 1.30) * 50
+= 2.5
+
+<br />
+
+#### Total PnL
+
+**Formula**
+
+Total PnL = Realised PnL + Unrealised PnL
+
+**Example**
+
+Assume current date is 04/01/2024 and user address is 0x1234567890abcdef1234567890abcdef12345678.
+
+Table token_prices
+| snapshot_date | price_in_usd |
+| --- | --- |
+| 2024-01-01 00:00:00+00 | 1.25 |
+| 2024-01-02 00:00:00+00 | 1.30 |
+| 2024-01-03 00:00:00+00 | 1.28 |
+| 2024-01-04 00:00:00+00 | 1.35 |
+
+Table user_balances
+| user_address | snapshot_date | balance |
+| --- | --- | --- |
+| 0x1234567890abcdef1234567890abcdef12345678 | 2024-01-01 00:00:00.000 UTC | 0 |
+| 0x1234567890abcdef1234567890abcdef12345678 | 2024-01-02 00:00:00.000 UTC | 100 |
+| 0x1234567890abcdef1234567890abcdef12345678 | 2024-01-03 00:00:00.000 UTC | 50 |
+
+<br />
+
+**Calculation**
+
+Ignoring all zero balances, the trades can be classified as follows:
+
+- Buy 100 tokens @ $1.30 on 2024-01-02 00:00:00.000 UTC
+- Sell 50 tokens @ $1.28 on 2024-01-03 00:00:00.000 UTC
+
+Average Cost Basis, P(avg) = 1.30
+Sell Price, P(sell) = 1.28
+Tokens Sold, Q(sell) = 100 - 50 = 50
+Current Token Price, P(current) = 1.35
+Amount of Token Holdings, Q(current) = 100 - 50 = 50
+
+Realised PnL ($)
+= (P(sell) - P(avg)) * Q(sell)
+= (1.28 - 1.30) * 50
+= -1
+
+Unrealised PnL ($)
+= (P(current) - P(avg)) * Q(current)
+= (1.35 - 1.30) * 50
+= 2.5
+
+Total PnL ($)
+= -1 + 2.5
+=1.5
 
 <br />
 
