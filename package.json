@@ -5,9 +5,9 @@
   "license": "GPL-3.0",
   "author": "ariessa",
   "type": "commonjs",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node app.js",
     "test": "jest --verbose"
   },
   "dependencies": {
@@ -16,6 +16,7 @@
     "ethers": "^6.14.3",
     "express": "^5.1.0",
     "pg": "^8.16.0",
+    "supertest": "^7.1.1",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
