@@ -1,9 +1,44 @@
+const cors = require("cors");
 const express = require("express");
 const app = express();
 const utils = require("./lib/utils");
 const db = require("./lib/db");
+const dotenv = require("dotenv");
+
+// Load .env file contents into process.env
+dotenv.config();
+
+const allowed_origin = process.env.FRONTEND_URL;
 
 app.use(express.json());
+
+// Restrict CORS
+app.use(
+  cors({
+    origin: allowed_origin,
+    methods: ["GET"],
+    credentials: true,
+  })
+);
+
+// API key check
+// app.use((req, res, next) => {
+//   const api_key = req.headers["x-api-key"];
+//   if (api_key !== process.env.FRONTEND_API_KEY) {
+//     console.log("Forbidden");
+//     return res.status(403).json({ error: "Forbidden" });
+//   }
+//   next();
+// });
+
+// Referer or origin check
+// app.use((req, res, next) => {
+//   const origin = req.get("Origin") || "";
+//   if (origin !== allowed_origin) {
+//     return res.status(403).json({ error: "Access Denied" });
+//   }
+//   next();
+// });
 
 app.get("/pnl/:address", async (req, res) => {
   let address = req.params.address;
