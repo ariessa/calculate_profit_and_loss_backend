@@ -15,6 +15,7 @@ Calculate the profit and loss (PnL) of a wallet address that holds xAVAX tokens.
   - [Setup](#setup)
 - [Tests](#tests)
   - [How to Run the Tests](#how-to-run-the-tests)
+  - [Unit Tests Covered](#unit-tests-covered)
 - [Database Functions](#database-functions)
   - [Calculate User's Profit and Loss (PnL)](#calculate-users-profit-and-loss-pnl)
   - [Get User's transactions](#get-users-transactions)
@@ -102,6 +103,8 @@ Get a list of unit tests and their verbose results
 make tests
 ```
 
+<img src="screenshots/tests.png"/>
+
 <br />
 
 ### Unit Tests Covered
@@ -133,6 +136,8 @@ make tests
     - should return empty results if address is valid but no transactions
     - should return error if address is invalid
     - should handle server errors
+
+<br />
 
 ## Database Functions
 
