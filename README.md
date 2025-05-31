@@ -104,6 +104,32 @@ make tests
 
 <br />
 
+### Unit Tests Covered
+
+- Database functions
+    - get_user_transactions
+        - returns buy and sell transactions for user with multiple balance changes
+        - returns empty array for user with no balance records
+        - returns empty array for user with only unchanged balances
+        - returns a single buy transaction for user with one balance event
+    - calculate_user_pnl
+        - User never held tokens
+        - User has held tokens but fully exited
+        - User with realised and unrealised gains
+        - User with realised and unrealised losses
+        - User with realised gains, still holding
+        - User with unrealised gains only
+        - User with no significant PnL
+        - User not in database
+
+- Utility Functions
+    - is_valid_address
+        - returns true when input is a valid address
+        - returns false when input is an invalid address
+
+- API Endpoints
+    - GET /pnl/:address
+
 ## Database Functions
 
 ### Calculate User's Profit and Loss (PnL)
