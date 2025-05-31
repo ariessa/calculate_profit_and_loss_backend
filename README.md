@@ -129,6 +129,10 @@ make tests
 
 - API Endpoints
     - GET /pnl/:address
+        - should return PnL and transactions if address is valid and has data
+        - should return empty results if address is valid but no transactions
+        - should return error if address is invalid
+        - should handle server errors
 
 ## Database Functions
 
