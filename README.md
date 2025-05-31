@@ -115,11 +115,6 @@ make tests
 
 ### Calculate User's Profit and Loss (PnL)
 
-Buy Trade = -(Token Amount * Token Price)
-Sell Trade = (Token Amount * Token Price)
-
-The following formula were used to calculate realised Pnl, unrealised PnL, and total PnL.
-
 #### Realised PnL
 
 **Average Cost Basis Formula, P(avg)**
@@ -148,6 +143,8 @@ Let:
 Then:
 
 Realised PnL = (P(sell) - P(avg)) * Q(sell)
+
+<br />
 
 **Example**
 
@@ -216,6 +213,8 @@ Then:
 
 Unrealised PnL = (P(current) - P(avg)) * Q(current)
 
+<br />
+
 **Example**
 
 Assume current date is 04/01/2024 and user address is 0x1234567890abcdef1234567890abcdef12345678.
@@ -260,6 +259,8 @@ Unrealised PnL ($)
 **Formula**
 
 Total PnL = Realised PnL + Unrealised PnL
+
+<br />
 
 **Example**
 
