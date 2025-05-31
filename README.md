@@ -15,9 +15,12 @@ Calculate the profit and loss (PnL) of a wallet address that holds xAVAX tokens.
     - [Setup](#setup)
 - [Tests](#tests)
     - [How to Run the Tests](#how-to-run-the-tests)
-- [Database Functions](#)
-    - [Calculate User's Profit and Loss](#)
-    - [Get User's transactions](#)
+- [Database Functions](#database-functions)
+    - [Calculate User's Profit and Loss (PnL)](#calculate-users-profit-and-loss-pnl)
+        - [Realised PnL](#realised-pnl)
+        - [Unrealised PnL](#unrealised-pnl)
+        - [Total PnL](#total-pnl)
+    - [Get User's transactions](#get-users-transactions)
 - [API Endpoint](#api-endpoint)
     - [GET /pnl/:address](#get-pnladdress)
 - [License](#license)
@@ -115,7 +118,7 @@ make tests
 Buy Trade = -(Token Amount * Token Price)
 Sell Trade = (Token Amount * Token Price)
 
-The following formula were used to calculate total PnL, realised Pnl, and unrealised PnL.
+The following formula were used to calculate realised Pnl, unrealised PnL, and total PnL.
 
 #### Realised PnL
 
