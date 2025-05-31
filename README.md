@@ -28,7 +28,7 @@ Calculate the profit and loss (PnL) of a wallet address that holds xAVAX tokens.
 
 - **Backend:** Node.js, Express.js
 - **Database:** PostgreSQL
-- **Query Engine:** Dune API
+- **Data Source:** Indexed data via Dune Analytics queries
 - **Testing:** Jest
 - **Infrastructure:** Docker, Bash Scripts
 - **Tooling & Automation:** Makefile, jq, curl
