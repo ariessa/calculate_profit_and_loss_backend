@@ -4,5 +4,5 @@ up:
 down:
 	./scripts/down.sh
 
-tests:
-	./scripts/tests.sh
+test:
+	./scripts/test.sh
