@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 4000
 
-CMD ["node", "index.js"]
+CMD ["bash", "-c", "node wait_for_db.js && node app.js"]
