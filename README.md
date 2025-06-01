@@ -10,6 +10,8 @@ Calculate the profit and loss (PnL) of a wallet address that holds xAVAX tokens.
 - [System Architecture Diagram](#system-architecture-diagram)
 - [Entity Relationship Diagram](#entity-relationship-diagram)
 - [Low Fidelity Wireframes](#low-fidelity-wireframes)
+  - [Home Page](#home-page)
+  - [Address Page](#address-page)
 - [Installation](#installation)
   - [Prerequisites](#prerequisites)
   - [Setup](#setup)
@@ -61,7 +63,15 @@ Headers have been updated to align with the database column names. Any NULL valu
 
 ## Low Fidelity Wireframes
 
-<img src="wireframes/low_fidelity_wireframes.png"/>
+### Home Page
+
+<img src="wireframes/home_page.png" alt="Home Page Wireframe" width="100%" />
+
+<br />
+
+### Address Page
+
+<img src="wireframes/address_page.png" alt="Address Page Wireframe" width="100%" />
 
 <br />
 
