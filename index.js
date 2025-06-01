@@ -21,25 +21,6 @@ app.use(
   })
 );
 
-// API key check
-// app.use((req, res, next) => {
-//   const api_key = req.headers["x-api-key"];
-//   if (api_key !== process.env.FRONTEND_API_KEY) {
-//     console.log("Forbidden");
-//     return res.status(403).json({ error: "Forbidden" });
-//   }
-//   next();
-// });
-
-// Referer or origin check
-// app.use((req, res, next) => {
-//   const origin = req.get("Origin") || "";
-//   if (origin !== allowed_origin) {
-//     return res.status(403).json({ error: "Access Denied" });
-//   }
-//   next();
-// });
-
 app.get("/pnl/:address", async (req, res) => {
   let address = req.params.address;
 
