@@ -1,6 +1,6 @@
 # Calculate Profit and Loss - Backend
 
-A backend service that calculates and displays the Profit and Loss (PnL) of a wallet address holding xAVAX tokens on the Avalanche C-Chain.
+A backend service that calculates and returns the Profit and Loss (PnL) of a wallet address holding xAVAX tokens on the Avalanche C-Chain.
 
 <br />
 
