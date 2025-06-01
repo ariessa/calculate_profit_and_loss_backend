@@ -12,7 +12,7 @@ let test_pool;
 const setup_test_db = async () => {
   // Connect to default DB to create a new test DB
   const admin_client = new Client({
-    host: process.env.DB_HOST,
+    host: process.env.IS_DOCKER == "true" ? process.env.DB_CONTAINER_NAME : process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: "postgres",
@@ -25,7 +25,7 @@ const setup_test_db = async () => {
 
   // Connect to the new test DB using a pool
   test_pool = new Pool({
-    host: process.env.DB_HOST,
+    host: process.env.IS_DOCKER == "true" ? process.env.DB_CONTAINER_NAME : process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: TEST_DB_NAME,
@@ -210,7 +210,7 @@ const delete_test_db = async () => {
   await test_pool.end();
 
   const admin_client = new Client({
-    host: process.env.DB_HOST,
+    host: process.env.IS_DOCKER == "true" ? process.env.DB_CONTAINER_NAME : process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: "postgres",
