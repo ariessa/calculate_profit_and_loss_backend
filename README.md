@@ -83,9 +83,18 @@ All installation instructions are geared for macOS Apple Silicon system. By defa
 
 For Windows system, `make` can be installed using 3 ways:
 
-- Using Make for Windows
+- Using make for Windows
 - Using chocolatey to install make
 - Using Windows Subsystem for Linux (WSL2)
+
+<br />
+
+You will need the following tools installed on your system:
+
+- make
+- Node.js v20+
+- Docker
+- Docker Compose v2
 
 <br />
 
