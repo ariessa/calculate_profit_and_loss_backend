@@ -17,4 +17,4 @@ if ! docker network inspect $NETWORK_NAME >/dev/null 2>&1; then
 fi
 
 # Build and start Docker container(s) in detached mode
-docker-compose --env-file .env --file docker-compose.yml up -d
+docker compose --env-file .env --file docker-compose.yml up -d
