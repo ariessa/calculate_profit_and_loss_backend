@@ -65,13 +65,13 @@ Headers have been updated to align with the database column names. Any NULL valu
 
 ### Home Page
 
-<img src="wireframes/home_page.png" alt="Home Page Wireframe" width="100%" />
+<img src="wireframes/home_page.png" alt="Home Page Wireframe" />
 
 <br />
 
 ### Address Page
 
-<img src="wireframes/address_page.png" alt="Address Page Wireframe" width="100%" />
+<img src="wireframes/address_page.png" alt="Address Page Wireframe" />
 
 <br />
 
